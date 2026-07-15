@@ -9,24 +9,46 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors()); // Allows cross-origin requests
 app.use(express.json()); // Parses incoming JSON payloads
+app.use(express.static('public'));
 
 // A simple health check route
 app.get('/', (req, res) => {
-  res.send('E-commerce API is running!');
+    res.send('E-commerce API is running!');
 });
 
 // GET endpoint to fetch all products
 app.get('/api/products', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM products ORDER BY created_at DESC');
-    res.json(result.rows);
-  } catch (err) {
-    console.error('Database error:', err.message);
-    res.status(500).json({ error: 'Failed to fetch products' });
-  }
+    try {
+        const result = await pool.query('SELECT * FROM products ORDER BY created_at DESC');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Database error:', err.message);
+        res.status(500).json({ error: 'Failed to fetch products' });
+    }
 });
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+// POST endpoint to add a new product
+app.post('/api/products', async (req, res) => {
+    // 1. Extract the data from the incoming request body
+    const { name, description, price, image_url } = req.body;
+
+    try {
+        // 2. Insert the data into the database using parameterized queries ($1, $2, etc.)
+        // This prevents SQL injection attacks!
+        const result = await pool.query(
+            'INSERT INTO products (name, description, price, image_url) VALUES ($1, $2, $3, $4) RETURNING *',
+            [name, description, price, image_url]
+        );
+
+        // 3. Send back the newly created product with a 201 (Created) status code
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error('Database error:', err.message);
+        res.status(500).json({ error: 'Failed to add product' });
+    }
 });
