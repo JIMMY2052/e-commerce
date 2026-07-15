@@ -50,7 +50,7 @@ app.post('/api/products', async (req, res) => {
         );
 
         // 3. Send back the newly created product with a 201 (Created) status code
-        res.status(201).json(result.rows[0]);
+        res.status(201).json("Product added successfully");
     } catch (err) {
         console.error('Database error:', err.message);
         res.status(500).json({ error: 'Failed to add product' });
