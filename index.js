@@ -28,9 +28,15 @@ app.get('/api/products', async (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+// Local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
-});
+  });
+}
+
+// Export for Vercel serverless deployment
+module.exports = app;
 
 // POST endpoint to add a new product
 app.post('/api/products', async (req, res) => {
