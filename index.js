@@ -11,10 +11,7 @@ app.use(cors()); // Allows cross-origin requests
 app.use(express.json()); // Parses incoming JSON payloads
 app.use(express.static('public'));
 
-// A simple health check route
-app.get('/', (req, res) => {
-    res.send('E-commerce API is running!');
-});
+
 
 // GET endpoint to fetch all products
 app.get('/api/products', async (req, res) => {
@@ -30,9 +27,9 @@ app.get('/api/products', async (req, res) => {
 // Start the server
 // Local development
 if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-  });
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
 }
 
 // Export for Vercel serverless deployment
