@@ -1,6 +1,7 @@
 // index.js
 const express = require('express');
 const cors = require('cors');
+const path = require('path'); // <-- Add this line
 const pool = require('./db');
 
 const app = express();
@@ -9,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors()); // Allows cross-origin requests
 app.use(express.json()); // Parses incoming JSON payloads
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 
